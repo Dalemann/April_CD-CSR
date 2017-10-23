@@ -1,0 +1,760 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model RAPP_CD_CSR.Models.Prj_Insert
+@{
+    ViewData ["Title"] = "Project";
+}
+
+<link rel="stylesheet" type="text/css" href="~/lib/bootstrap/dist/css/jquery.datetimepicker.min.css" />
+<link rel="stylesheet" type="text/css" href="~/lib/bootstrap/dist/css/jquery.datetimepicker.min.css" />
+<style type="text/css">
+    .custom-date-style {
+        background-color: red !important;
+    }
+
+    .input {
+    }
+
+    .input-wide {
+        width: 500px;
+    }
+</style>
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+
+<!-- Number Only -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        //called when key is pressed in textbox
+        $("#c_Keluaran_Output_Satuan").keypress(function (e) {
+            //if the letter is not digit then display error and don't type anything
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                //display error message
+                //$("#errmsg").html("Digits Only").show().fadeOut("slow");
+                return false;
+            }
+        });
+    });
+</script>
+
+<!-- - Pilih - -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        var items = "<option value='0'>- Pilih Sub Categori -</option>";
+        var items_Kecamatan = "<option value='0'>- Pilih Kecamatan -</option>";
+        var items_Desa = "<option value='0'>- Pilih Desa -</option>";
+
+        $('#ID_Proyek_Sub').html(items);
+        $('#ID_Kecamatan').html(items_Kecamatan);
+        $('#ID_Desa').html(items_Desa);
+    });
+</script>
+
+
+<!-- clear form -->
+<script type="text/javascript">
+    function clearField() {
+        $("frm_Project")[0].reset();
+
+        //HTMLFormControlsCollection.id
+        //if (document.getElementById) {
+        //    document.ID_Proyek.reset();
+        //    //document.chatform.reset();
+        //}
+        //var form = document.getElementById("Project");
+        //form.reset();
+    }
+
+</script>
+
+
+
+
+
+<!-- Sub Category -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#ID_Proyek').change(function () {
+            var url = '@Url.Content("~/")' + "Project/GetSubCategory";
+            var ddlsource = "#ID_Proyek";
+            $.getJSON ( url, { ID_Proyek: $(ddlsource).val() }, function (data) {
+                var items = '';                             // a new variable
+                $("#ID_Proyek_Sub").empty();                // clear drop_down_list from previous item list
+                $.each(data, function (i, subcategory) {    // put new item list into drop_down_list
+                    items += "<option value='" + subcategory.value + "'>" + subcategory.text + "</option>";     // populate item for sub_category
+                });
+                $('#ID_Proyek_Sub').html(items);
+            });
+        });
+    });
+</script>
+
+<!-- Kecamatan -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#ID_Kabupaten').change(function () {
+            var url = '@Url.Content("~/")' + "Project/Get_Kecamatan";
+            var ddlsource = "#ID_Kabupaten";
+            $.getJSON(url, { ID_Kabupaten: $(ddlsource).val() }, function (data) {
+                var items = '';
+                $("#ID_Kecamatan").empty();
+                $.each(data, function (i, kecamatan) {
+                    items += "<option value='" + kecamatan.value + "'>" + kecamatan.text + "</option>";     // populate item for sub_category
+                });
+                $('#ID_Kecamatan').html(items);
+            })
+
+            var items_Desa = "<option value='0'>- Pilih Desa -</option>";
+            $('#ID_Desa').html(items_Desa);
+        })
+    });
+</script>
+
+<!-- Desa -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#ID_Kecamatan').change(function () {
+            var url = '@Url.Content("~/")' + "Project/Get_Desa";
+            var ddlsource = "#ID_Kecamatan";
+            $.getJSON(url, { ID_Kecamatan: $(ddlsource).val() }, function (data) {
+                var items = '';
+                $("#ID_Desa").empty();
+                $.each(data, function (i, desa) {
+                    items += "<option value='" + desa.value + "'>" + desa.text + "</option>";     // populate item for sub_category
+                });
+                $('#ID_Desa').html(items);
+            })
+        })
+    });
+</script>
+
+
+
+<div class="bs-docs-section">
+    <div class="row">
+        <div class="col-lg-12">
+            <ul class="breadcrumb">
+                <li><a href="#">Project</a></li>
+                <li class="active">New Project</li>
+            </ul>
+
+            <form class="form-horizontal" id="frm_Project" asp-controller="Project" asp-action="Index" method="post">
+
+                <ul class="nav nav-tabs">
+                    <li class="active"><a aria-expanded="true" href="#project" data-toggle="tab">Project</a></li>
+                    <li><a aria-expanded="false" href="#location" data-toggle="tab">Location</a></li>
+                    <li><a aria-expanded="false" href="#officer" data-toggle="tab">CDO/CSRO</a></li>
+                    <li><a aria-expanded="false" href="#distance" data-toggle="tab">Distance</a></li>
+                    <li><a aria-expanded="false" href="#LPP_A_E" data-toggle="tab">LPP (a - e)</a></li>
+                    <li><a aria-expanded="false" href="#LPP_F_K" data-toggle="tab">LPP (f - k)</a></li>
+                </ul>
+
+                <div class="tab-content" id="myTabContent">
+
+                    <br />
+
+                    <!-- Project -->
+                    <div class="tab-pane fade active in" id="project">
+                        <div class="row">
+                            <div class="col-lg-9">
+
+                                <!-- No Project -->
+                                <div class="form-group">
+                                    <label class="col-lg-2 control-label" for="NoProject">No</label>
+                                    <div class="col-lg-6">
+                                        @Html.TextBox("No_Project", null, new {
+                                        @class = "form-control", placeholder = "Nomor Proyek", autocomplete = "off"
+                                        })
+                                    </div>
+                                </div>
+
+                                <!-- Category -->
+                                <div class="form-group">
+                                    <label class="col-lg-2 control-label" for="select">Category</label>
+                                    <div class="col-lg-6">
+                                        <select asp-for="ID_Proyek" class="form-control"
+                                                asp-items="@(new SelectList (@ViewBag.Category, "ID_Proyek", "Proyek"))"></select>
+                                    </div>
+                                </div>
+
+                                <!-- Sub Category -->
+                                <div class="form-group">
+                                    <label class="col-lg-2 control-label" for="select">Sub Category</label>
+                                    <div class="col-lg-6">
+                                        <select asp-for="ID_Proyek_Sub" class="form-control" id="ID_Proyek_Sub" name="ID_Proyek_Sub"
+                                                asp-items="@(new SelectList (string.Empty, "ID_Proyek_Sub", "Proyek_Sub"))"></select>
+                                    </div>
+                                </div>
+
+                                <!-- Project Name -->
+                                <div class="form-group">
+                                    <label class="col-lg-2 control-label" for="ProjectName">Project Name</label>
+                                    <div class="col-lg-6">
+                                        @Html.TextBox("Project_Name", null, new {
+                                        @class = "form-control", placeholder = "Nama Project", autocomplete = "off"
+                                        })
+                                    </div>
+                                </div>
+
+                                <!-- Date Start -->
+                                <div class="form-group">
+                                    <label class="col-lg-2 control-label" for="select"> Date Start</label>
+                                    <div class="col-lg-6">
+                                        @*<input type="text" id="Date_Start" class="form-control" name="date" placeholder="YYYY/MM/DD" autocomplete="off">*@
+                                        @Html.TextBox("Date_Start", null, new {
+                                        @class = "form-control", placeholder = "YYYY/MM/DD", autocomplete = "off"
+                                        })
+                                    </div>
+                                </div>
+
+                                <!-- Date End -->
+                                <div class="form-group">
+                                    <label class="col-lg-2 control-label" for="select"> Date End</label>
+                                    <div class="col-lg-6">
+                                        @*<input type="text" id="Date_End" class="form-control" name="date" placeholder="YYYY/MM/DD" autocomplete="off">*@
+                                        @Html.TextBox("Date_End", null, new {
+                                        @class = "form-control", placeholder = "YYYY/MM/DD", autocomplete = "off"
+                                        })
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="tab-pane fade" id="location">
+                        <div class="row">
+                            <div class="col-lg-9">
+
+                                <!-- BG/BU -->
+                                <div class="form-group">
+                                    <label class="col-lg-2 control-label" for="select">BG/BU</label>
+                                    <div class="col-lg-6">
+                                        @*@Html.Label("April")*@
+                                        <input class="form-control" id="Input_April" type="text" placeholder="April" disabled="">
+                                    </div>
+                                </div>
+
+                                <!-- Province -->
+                                <div class="form-group">
+                                    <label class="col-lg-2 control-label" for="select">Province</label>
+                                    <div class="col-lg-6">
+                                        @*@Html.Label("Riau")*@
+                                        <input class="form-control" id="Input_Riau" type="text" placeholder="Riau" disabled="">
+                                    </div>
+                                </div>
+
+                                <!-- Estate -->
+                                <div class="form-group">
+                                    <label class="col-lg-2 control-label" for="select">Estate</label>
+                                    <div class="col-lg-6">
+                                        <select asp-for="ID_Estate" class="form-control"
+                                                asp-items="@(new SelectList (@ViewBag.Estate, "Id_Estate", "Estate_Name"))"></select>
+                                    </div>
+                                </div>
+
+                                <!-- Kota/Kabupaten -->
+                                <div class="form-group">
+                                    <label class="col-lg-2 control-label" for="select">City</label>
+                                    <div class="col-lg-6">
+                                        <select asp-for="ID_Kabupaten" class="form-control"
+                                                asp-items="@(new SelectList (@ViewBag.Kabupaten, "ID_Kabupaten", "Kabupaten"))"></select>
+                                    </div>
+                                </div>
+
+                                <!-- Kecamatan >-->
+                                <div class="form-group">
+                                    <label class="col-lg-2 control-label" for="select">District</label>
+                                    <div class="col-lg-6">
+                                        <select asp-for="ID_Kecamatan" class="form-control" id="ID_Kecamatan" name="ID_Kecamatan"
+                                                asp-items="@(new SelectList (string.Empty, "ID_Kecamatan", "Kecamatan"))"></select>
+                                    </div>
+                                </div>
+
+                                <!-- Desa >-->
+                                <div class="form-group">
+                                    <label class="col-lg-2 control-label" for="select">Village</label>
+                                    <div class="col-lg-6">
+                                        <select asp-for="ID_Desa" class="form-control" id="ID_Desa" name="ID_Desa"
+                                                asp-items="@(new SelectList (string.Empty, "ID_Desa", "Nama_Desa"))"></select>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- officer, CDO/CDSRO -->
+                    <div class="tab-pane fade" id="officer">
+                        <div class="row">
+                            <div class="col-lg-9">
+                                <div class="form-group">
+                                    <label class="col-lg-2 control-label" for="select">CDO/CDSRO</label>
+                                    <div class="col-lg-6">
+                                        <select asp-for="ID_CDO_CSRO" class="form-control"
+                                                asp-items="@(new SelectList (ViewBag.CDO_CSRO, "ID_CDO_CSRO", "CDO_CSRO_Nama"))"></select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- distance -->
+                    <div class="tab-pane fade" id="distance">
+                        <div class="row">
+                            <div class="col-lg-9">
+                                <!-- Distance -->
+                                <div class="form-group">
+                                    <label class="col-lg-2 control-label" for="select">Distance</label>
+                                    <div class="col-lg-6">
+                                        <select asp-for="ID_Distance" class="form-control"
+                                                asp-items="@(new SelectList (ViewBag.Distance, "ID_Distance","Distance"))"></select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LPP_A_E -->
+                    <div class="tab-pane fade" id="LPP_A_E">
+                        <div class="row">
+
+                            <!-- [a_Permasalahan] -->
+                            <div class="form-group col-lg-9">
+                                <div class="col-lg-2 pull-left">
+                                    <label>Permasalahan </label>
+                                </div>
+                                <div class="col-lg-9">
+                                    @Html.TextArea("a_Permasalahan", null, new {
+                                    @class = "form-control", placeholder = "a. Permasalahan, Tuliskan permasalahan proyek disini ...", autocomplete = "off", rows = 5
+                                    })
+                                </div>
+                            </div>
+
+                            <!-- [b_Tujuan_Proyek] -->
+                            <div class="form-group col-lg-9">
+                                <div class="col-lg-2 pull-left">
+                                    <label>Tujuan</label>
+                                </div>
+                                <div class="col-lg-9">
+                                    @Html.TextArea("b_Tujuan_Proyek", null, new {
+                                    @class = "form-control", placeholder = "b. Tujuan Proyek, Tuliskan permasalahan proyek disini ...", autocomplete = "off", rows = 5
+                                    })
+                                </div>
+                            </div>
+
+                            <!-- [c_Keluaran_Output] -->
+                            <div class="form-group col-lg-9">
+                                <div class="col-lg-2 pull-left">
+                                    <label>Keluaran/Output</label>
+                                </div>
+                                <div class="col-lg-9">
+                                    <div class="form-group">
+                                        <div class="col-lg-2">
+                                            @Html.TextBox("c_Keluaran_Output_Satuan", null, new {
+                                            @class = "form-control", placeholder = "Angka", autocomplete = "off"
+                                            })
+                                        </div>
+                                        <div class="col-lg-10">
+                                            @Html.TextArea("c_Keluaran_Output", null, new {
+                                            @class = "form-control", placeholder = "c. Keluaran Output, Tuliskan Keluaran/Output disini (satuan)...", autocomplete = "off", rows = 3
+                                            })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- [d_Outcome] -->
+                            <div class="form-group col-lg-9">
+                                <div class="col-lg-2 pull-left">
+                                    <label>Outcome</label>
+                                </div>
+                                <div class="col-lg-9">
+                                    @Html.TextArea("d_Outcome", null, new {
+                                    @class = "form-control", placeholder = "d. Outcome, Tuliskan outcome proyek disini ...", autocomplete = "off", rows = 5
+                                    })
+                                </div>
+                            </div>
+
+                            <!-- [e_Beneficiaries] -->
+                            <div class="form-group col-lg-9">
+                                <div class="col-lg-2 pull-left">
+                                    <label>Beneficiaries</label>
+                                </div>
+                                <div class="col-lg-9">
+                                    @Html.TextArea("e_Beneficiaries", null, new {
+                                    @class = "form-control", placeholder = "e. Beneficiaries, Tuliskan penerima manfaat-nya disini ...", autocomplete = "off", rows = 5
+                                    })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LPP_F_K -->
+                    <div class="tab-pane fade" id="LPP_F_K">
+                        <div class="row">
+
+                            <!-- [f_Waktu_Durasi] -->
+                            <div class="form-group col-lg-9">
+                                <div class="col-lg-2 pull-left">
+                                    <label>Waktu/Durasi</label>
+                                </div>
+                                <div class="col-lg-9">
+                                    @Html.TextArea("f_Waktu_Durasi", null, new {
+                                    @class = "form-control", placeholder = "f. Waktu/Durasi, Tuliskan waktu/durasi-nya disini ...", autocomplete = "off", rows = 5
+                                })
+                                </div>
+                            </div>
+
+                            <!-- [g_Cara_Pelaksanaan] -->
+                            <div class="form-group col-lg-9">
+                                <div class="col-lg-2 pull-left">
+                                    <label>Cara Pelaksanaan</label>
+                                </div>
+                                <div class="col-lg-9">
+                                    @Html.TextArea("g_Cara_Pelaksanaan", null, new {
+                                    @class = "form-control", placeholder = "g. Cara Pelaksanaan, Tuliskan cara pelaksanaan-nya disini ...", autocomplete = "off", rows = 5
+                                    })
+                                </div>
+                            </div>
+
+                            <!-- [h_Benefit_For_Beneficiaries] -->
+                            <div class="form-group col-lg-9">
+                                <div class="col-lg-2 pull-left">
+                                    <label>Benefit for Beneficiaries</label>
+                                </div>
+                                <div class="col-lg-9">
+                                    @Html.TextArea("h_Benefit_For_Beneficiaries", null, new {
+                                    @class = "form-control", placeholder = "h. Benefit For Beneficiaries, Tuliskan 'Benefit For Beneficiaries'-nya disini ...", autocomplete = "off", rows = 5
+                                    })
+                                </div>
+                            </div>
+
+                            <!-- [i_Benefit_For_Company] -->
+                            <div class="form-group col-lg-9">
+                                <div class="col-lg-2 pull-left">
+                                    <label>Benefit for Company</label>
+                                </div>
+                                <div class="col-lg-9">
+                                    @Html.TextArea("i_Benefit_For_Company", null, new {
+                                    @class = "form-control", placeholder = "i. Benefit For Company, Tuliskan 'Benefit For Company'-nya disini ...", autocomplete = "off", rows = 5
+                                    })
+                                </div>
+                            </div>
+
+                            <!-- [j_Sustainable_Strategy] -->
+                            <div class="form-group col-lg-9">
+                                <div class="col-lg-2 pull-left">
+                                    <label>Sustainable Strategy</label>
+                                </div>
+                                <div class="col-lg-9">
+                                    @Html.TextArea("j_Sustainable_Strategy", null, new {
+                                    @class = "form-control", placeholder = "j. Sustainable Strategy, Tuliskan 'Sustainable Strategy'-nya disini ...", autocomplete = "off", rows = 5
+                                    })
+                                </div>
+                            </div>
+
+                            <!-- [k_Kontribusi_Proverty_Elevated] -->
+                            <div class="form-group col-lg-9">
+                                <div class="col-lg-2 pull-left">
+                                    <label>Kontribusi Proverty Elevated</label>
+                                </div>
+                                <div class="col-lg-9">
+                                    @Html.TextArea("k_Kontribusi_Proverty_Elevated", null, new {
+                                    @class = "form-control", placeholder = "k. Kontribusi Proverty Elevated, Tuliskan Kontribusi 'Proverty Elevated'-nya disini ...", autocomplete = "off", rows = 5
+                                    })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+                    <br />
+
+                    <!-- Modal Submitted Project Code -->
+                    <div class="row">
+                        <div class="col-lg-9">
+                            <div class="form-group">
+                                <div class="col-lg-3 text-left col-lg-offset-2">
+                                    <button type="reset" class="btn btn-default">Reset</button>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                                <div class="col-lg-3 text-right">
+                                    <button id="sNo_Project_CD_CSR" type="button" class="btn btn-success" data-toggle="modal" data-target="#Project_Code">
+                                        @ViewBag.No_Project_CD_CSR
+                                    </button>
+                                </div>
+
+
+                                <!-- Modal: Submitted Projce Code -->
+                                <div class="modal fade bd-example-modal-lg" id="Project_Code" tabindex="-1" role="dialog" aria-labelledby="Project_CodelLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <h4 class="modal-title text-center">Submitted Project Code</h4>
+                                            </div>
+                                            <div class="modal-body">
+
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+
+                                                            <table class="table table-bordered table-hover" border="0" cellpadding="5" cellspacing="5" style="width:70%;">
+                                                                <tbody>
+                                                                    <!-- No_Project_CD_CSR -->
+                                                                    <tr>
+                                                                        <th style="width:5%;">
+                                                                            <p style="margin-left: 5px;"><label>No Project CD/CSR</label></p>
+                                                                        </th>
+                                                                        <td style="width:15%;">
+                                                                            <p style="margin-left: 5px;">@ViewBag.No_Project_CD_CSR </p>
+                                                                        </td>
+                                                                    </tr>
+
+                                                                    <!-- No_Project & Project_Name -->
+                                                                    <tr>
+                                                                        <th style="width:5%" @*rowspan="2" *@>
+                                                                            <p style="margin-left: 5px;"><label>No Project</label></p>
+                                                                        </th>
+                                                                        <td style="width:15%;">
+
+                                                                            <div class="row">
+                                                                                <div class="col-lg-9 pull-left">
+                                                                                    <label>@ViewBag.Header_No_Project</label>
+                                                                                </div>
+                                                                                <div class="form-group col-lg-12">
+                                                                                    <div class="col-lg-3">
+                                                                                        <label>Project Name</label>
+                                                                                    </div>
+                                                                                    <div class="col-lg-9 pull-left">
+                                                                                        @ViewBag.Header_Project_Name
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+
+                                                                    <!-- Main Proyek & Sub Proyek -->
+                                                                    <tr>
+                                                                        <th style="width:5%;" @*rowspan="2" *@>
+                                                                            <p style="margin-left: 5px;"><label>Project</label></p>
+                                                                        </th>
+                                                                        <td style="width:15%;">
+                                                                            <div class="row">
+                                                                                <div class="form-group col-lg-12">
+                                                                                    <div class="col-lg-3">
+                                                                                        <label>Main Project</label>
+                                                                                    </div>
+                                                                                    <div class="col-lg-9 pull-left">
+                                                                                        @ViewBag.Header_Main_Project
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group col-lg-12">
+                                                                                    <div class="col-lg-3">
+                                                                                        <label>Sub Project</label>
+                                                                                    </div>
+                                                                                    <div class="col-lg-9 pull-left">
+                                                                                        @ViewBag.Header_Sub_Peoject
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+
+                                                                    <!-- BG_BU -->
+                                                                    <tr>
+                                                                        <th style="width:5%;">
+                                                                            <p style="margin-left: 5px;"><label>BG/BU</label></p>
+                                                                        </th>
+                                                                        <td style="width:15%;">
+                                                                            <p style="margin-left: 5px;">@ViewBag.Header_BG_BU</p>
+                                                                        </td>
+                                                                    </tr>
+
+                                                                    <!-- Estate, Province, Kabupaten/Kota, Kecamatan, Desa -->
+                                                                    <tr>
+                                                                        <th style="width:5%;" @*rowspan="4" *@>
+                                                                            <p style="margin-left: 5px;"><label>Location</label></p>
+                                                                        </th>
+                                                                        <td style="width:15%;">
+                                                                            <div class="row">
+                                                                                <div class="form-group col-lg-12">
+                                                                                    <div class="col-lg-3">
+                                                                                        <label>Estate</label>
+                                                                                    </div>
+                                                                                    <div class="col-lg-9 pull-left">
+                                                                                        @ViewBag.Header_Estate
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group col-lg-12">
+                                                                                    <div class="col-lg-3">
+                                                                                        <label>Province</label>
+                                                                                    </div>
+                                                                                    <div class="col-lg-9 pull-left">
+                                                                                        @ViewBag.Header_Province
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group col-lg-12">
+                                                                                    <div class="col-lg-3">
+                                                                                        <label>Kabupaten</label>
+                                                                                    </div>
+                                                                                    <div class="col-lg-9 pull-left">
+                                                                                        @ViewBag.Header_Kabupaten
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div class="form-group col-lg-12">
+                                                                                    <div class="col-lg-3">
+                                                                                        <label>Kecamatan</label>
+                                                                                    </div>
+                                                                                    <div class="col-lg-9 pull-left">
+                                                                                        @ViewBag.Header_Kecamatan
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group col-lg-12">
+                                                                                    <div class="col-lg-3">
+                                                                                        <label>Desa</label>
+                                                                                    </div>
+                                                                                    <div class="col-lg-9 pull-left">
+                                                                                        @ViewBag.Header_Desa
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+
+                                                                    <!-- Distance -->
+                                                                    <tr>
+                                                                        <th style="width:5%;">
+                                                                            <p style="margin-left: 5px;"><label>Distance</label></p>
+                                                                        </th>
+                                                                        <td style="width:15%;">
+                                                                            <p style="margin-left: 5px;">@ViewBag.Header_Distance</p>
+                                                                        </td>
+                                                                    </tr>
+
+                                                                    <!--CDO/CSRO Name-->
+                                                                    <tr>
+                                                                        <th style="width:5%;">
+                                                                            <p style="margin-left: 5px;"><label>CDO/CSRO Name</label></p>
+                                                                        </th>
+                                                                        <td style="width:15%;">
+                                                                            <p style="margin-left: 5px;">@ViewBag.Header_CDO_CSRO</p>
+                                                                        </td>
+                                                                    </tr>
+
+                                                                    <!-- Date Start & Date End-->
+                                                                    <tr>
+                                                                        <th style="width:5%;" rowspan="2">
+                                                                            <p style="margin-left: 5px;"><label>Date</label></p>
+                                                                        </th>
+                                                                        <td style="width:15%;">
+                                                                            <div class="row">
+                                                                                <div class="form-group col-lg-12">
+                                                                                    <div class="col-lg-3">
+                                                                                        <label>Start</label>
+                                                                                    </div>
+                                                                                    <div class="col-lg-9 pull-left">
+                                                                                        @ViewBag.Header_Date_Start
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group col-lg-12">
+                                                                                    <div class="col-lg-3">
+                                                                                        <label>End</label>
+                                                                                    </div>
+                                                                                    <div class="col-lg-9 pull-left">
+                                                                                        @ViewBag.Header_Date_End
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                @*<button type="button" class="btn btn-primary">Save changes</button>*@
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/bootstrap/dist/js/jquery.datetimepicker.full.js"></script>
+
+<script>
+
+    $.datetimepicker.setLocale('en');
+
+    $('#datetimepicker_format').datetimepicker({ value: '2015/04/15 05:03', format: $("#datetimepicker_format_value").val() });
+    console.log($('#datetimepicker_format').datetimepicker('getValue'));
+
+    $("#datetimepicker_format_change").on("click", function (e) {
+        $("#datetimepicker_format").data('xdsoft_datetimepicker').setOptions({ format: $("#datetimepicker_format_value").val() });
+    });
+    $("#datetimepicker_format_locale").on("change", function (e) {
+        $.datetimepicker.setLocale($(e.currentTarget).val());
+    });
+
+    $('#datetimepicker').datetimepicker({
+        dayOfWeekStart: 1,
+        lang: 'en',
+        disabledDates: ['1986/01/08', '1986/01/09', '1986/01/10'],
+        startDate: '1986/01/05'
+    });
+    $('#datetimepicker').datetimepicker({ value: '2015/04/15 05:03', step: 10 });
+
+    $('.some_class').datetimepicker();
+
+    $('#Date_Start').datetimepicker({
+        onGenerate: function (ct) {
+            $(this).find('.xdsoft_date.xdsoft_weekend')
+                .addClass('xdsoft_disabled');
+        },
+        weekends: ['01.01.2014', '02.01.2014', '03.01.2014', '04.01.2014', '05.01.2014', '06.01.2014'],
+        timepicker: false
+    });
+
+    $('#Date_End').datetimepicker({
+        onGenerate: function (ct) {
+            $(this).find('.xdsoft_date.xdsoft_weekend')
+                .addClass('xdsoft_disabled');
+        },
+        weekends: ['01.01.2014', '02.01.2014', '03.01.2014', '04.01.2014', '05.01.2014', '06.01.2014'],
+        timepicker: false
+    });
+    var dateToDisable = new Date();
+    dateToDisable.setDate(dateToDisable.getDate() + 2);
+
+</script>

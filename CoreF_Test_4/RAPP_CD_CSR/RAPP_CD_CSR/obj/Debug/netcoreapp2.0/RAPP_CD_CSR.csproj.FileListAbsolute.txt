@@ -1,0 +1,11 @@
+C:\Users\user\Documents\Visual Studio 2017\Project\CoreF_Test_4\RAPP_CD_CSR\RAPP_CD_CSR\bin\Debug\netcoreapp2.0\RAPP_CD_CSR.deps.json
+C:\Users\user\Documents\Visual Studio 2017\Project\CoreF_Test_4\RAPP_CD_CSR\RAPP_CD_CSR\bin\Debug\netcoreapp2.0\RAPP_CD_CSR.runtimeconfig.json
+C:\Users\user\Documents\Visual Studio 2017\Project\CoreF_Test_4\RAPP_CD_CSR\RAPP_CD_CSR\bin\Debug\netcoreapp2.0\RAPP_CD_CSR.runtimeconfig.dev.json
+C:\Users\user\Documents\Visual Studio 2017\Project\CoreF_Test_4\RAPP_CD_CSR\RAPP_CD_CSR\bin\Debug\netcoreapp2.0\RAPP_CD_CSR.dll
+C:\Users\user\Documents\Visual Studio 2017\Project\CoreF_Test_4\RAPP_CD_CSR\RAPP_CD_CSR\bin\Debug\netcoreapp2.0\RAPP_CD_CSR.pdb
+C:\Users\user\Documents\Visual Studio 2017\Project\CoreF_Test_4\RAPP_CD_CSR\RAPP_CD_CSR\obj\Debug\netcoreapp2.0\RAPP_CD_CSR.csprojResolveAssemblyReference.cache
+C:\Users\user\Documents\Visual Studio 2017\Project\CoreF_Test_4\RAPP_CD_CSR\RAPP_CD_CSR\obj\Debug\netcoreapp2.0\RAPP_CD_CSR.csproj.CoreCompileInputs.cache
+C:\Users\user\Documents\Visual Studio 2017\Project\CoreF_Test_4\RAPP_CD_CSR\RAPP_CD_CSR\obj\Debug\netcoreapp2.0\RAPP_CD_CSR.AssemblyInfoInputs.cache
+C:\Users\user\Documents\Visual Studio 2017\Project\CoreF_Test_4\RAPP_CD_CSR\RAPP_CD_CSR\obj\Debug\netcoreapp2.0\RAPP_CD_CSR.AssemblyInfo.cs
+C:\Users\user\Documents\Visual Studio 2017\Project\CoreF_Test_4\RAPP_CD_CSR\RAPP_CD_CSR\obj\Debug\netcoreapp2.0\RAPP_CD_CSR.dll
+C:\Users\user\Documents\Visual Studio 2017\Project\CoreF_Test_4\RAPP_CD_CSR\RAPP_CD_CSR\obj\Debug\netcoreapp2.0\RAPP_CD_CSR.pdb
